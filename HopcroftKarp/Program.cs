@@ -28,14 +28,14 @@ namespace HopcroftKarp
                 IReadOnlyDictionary<string, string> toMatchedRight,
                 IReadOnlyDictionary<string, string> toMatchedLeft,
                 IDictionary<string, long> distances,
-                Queue<string> unmatchedLefts)
+                Queue<string> q)
         {
             foreach (var left in lefts)
             {
                 if (toMatchedRight[left] == "")
                 {
                     distances[left] = 0;
-                    unmatchedLefts.Enqueue(left);
+                    q.Enqueue(left);
                 }
                 else
                 {
@@ -45,9 +45,9 @@ namespace HopcroftKarp
 
             distances[""] = long.MaxValue;
 
-            while (0 < unmatchedLefts.Count)
+            while (0 < q.Count)
             {
-                var left = unmatchedLefts.Dequeue();
+                var left = q.Dequeue();
 
                 if (distances[left] < distances[""])
                 {
@@ -58,7 +58,7 @@ namespace HopcroftKarp
                         {
                             // Reach here if the right is not matched with left.
                             distances[left2] = distances[left] + 1;
-                            unmatchedLefts.Enqueue(left2);
+                            q.Enqueue(left2);
                         }
                     }
                 }
@@ -117,7 +117,7 @@ namespace HopcroftKarp
 
             var distances = new Dictionary<string, long>();
 
-            var unmatchedLefts = new Queue<string>();
+            var q = new Queue<string>();
 
             // All lefts are unmatched at first
             var toMatchedRight = lefts.ToDictionary(s => s, s => "");
@@ -132,7 +132,7 @@ namespace HopcroftKarp
 
             var matchingCount = 0L;
 
-            while (Bfs(lefts, edges, toMatchedRight, toMatchedLeft, distances, unmatchedLefts))
+            while (Bfs(lefts, edges, toMatchedRight, toMatchedLeft, distances, q))
             {
                 matchingCount += lefts.Where(left => toMatchedRight[left] == "")
                                       .LongCount(left => Dfs(left, edges, toMatchedRight, toMatchedLeft, distances));
