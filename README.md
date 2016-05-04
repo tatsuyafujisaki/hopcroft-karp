@@ -3,6 +3,6 @@
 ###### A graph used in the program
 ![Image of Hopcroft–Karp algorithm](https://upload.wikimedia.org/wikipedia/commons/e/ee/HopcroftKarpExample.png)
 
-###### Reference
+###### References
 * https://en.wikipedia.org/wiki/Hopcroft%E2%80%93Karp_algorithm
 * https://www.youtube.com/watch?v=lM5eIpF0xjA
