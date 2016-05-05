@@ -20,7 +20,14 @@ namespace HopcroftKarp
                 ["U4"] = new[] { "V1", "V3" }
             };
 
-            Console.WriteLine(HopcroftKarp(lefts, rights, edges));
+            var matches = HopcroftKarp(lefts, rights, edges);
+
+            Console.WriteLine($"# of matches: {matches.Count}\n");
+
+            foreach (var match in matches)
+            {
+                Console.WriteLine($"Match: {match.Key} -> {match.Value}");
+            }
         }
 
         // BFS
@@ -69,7 +76,7 @@ namespace HopcroftKarp
         }
 
         // DFS
-        private static bool IsMathingIncremented(string left,
+        private static bool TryMatching(string left,
                                                  IReadOnlyDictionary<string, string[]> edges,
                                                  IDictionary<string, string> toMatchedRight,
                                                  IDictionary<string, string> toMatchedLeft,
@@ -85,7 +92,7 @@ namespace HopcroftKarp
                 var nextLeft = toMatchedLeft[right];
                 if (distances[nextLeft] == distances[left] + 1)
                 {
-                    if (IsMathingIncremented(nextLeft, edges, toMatchedRight, toMatchedLeft, distances))
+                    if (TryMatching(nextLeft, edges, toMatchedRight, toMatchedLeft, distances))
                     {
                         toMatchedLeft[right] = left;
                         toMatchedRight[left] = right;
@@ -100,9 +107,9 @@ namespace HopcroftKarp
             return false;
         }
 
-        private static long HopcroftKarp(string[] lefts,
-                                          IEnumerable<string> rights,
-                                          IReadOnlyDictionary<string, string[]> edges)
+        private static Dictionary<string, string> HopcroftKarp(string[] lefts,
+                                                  IEnumerable<string> rights,
+                                                  IReadOnlyDictionary<string, string[]> edges)
         {
             // "distance" is from a starting left to another left when zig-zaging left, right, left, right, left in DFS.
 
@@ -133,19 +140,27 @@ namespace HopcroftKarp
             // Using either of them is enough but inefficient
             // because a dictionary cannot be straightforwardly looked up bi-directionally.
 
-            var matchingCount = 0L;
-
             while (HasAugmentingPath(lefts, edges, toMatchedRight, toMatchedLeft, distances, q))
             {
-                matchingCount += lefts.Where(left => toMatchedRight[left] == "")
-                                      .LongCount(unmatchedLeft => IsMathingIncremented(unmatchedLeft,
-                                                                                       edges,
-                                                                                       toMatchedRight,
-                                                                                       toMatchedLeft,
-                                                                                       distances));
+                foreach (var unmatchedLeft in lefts.Where(left => toMatchedRight[left] == ""))
+                {
+                    TryMatching(unmatchedLeft, edges, toMatchedRight, toMatchedLeft, distances);
+                }
             }
 
-            return matchingCount;
+            // Remove unmatches
+            RemoveItems(toMatchedLeft, kvp => kvp.Value == "");
+
+            // Return matches
+            return toMatchedRight;
+        }
+
+        private static void RemoveItems<T1, T2>(IDictionary<T1, T2> d, Func<KeyValuePair<T1, T2>, bool> isRemovable)
+        {
+            foreach (var kvp in d.Where(isRemovable).ToList())
+            {
+                d.Remove(kvp.Key);
+            }
         }
     }
 }
