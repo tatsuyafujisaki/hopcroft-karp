@@ -149,7 +149,7 @@ namespace HopcroftKarp
             }
 
             // Remove unmatches
-            RemoveItems(toMatchedLeft, kvp => kvp.Value == "");
+            RemoveItems(toMatchedRight, kvp => kvp.Value == "");
 
             // Return matches
             return toMatchedRight;
