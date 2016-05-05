@@ -23,7 +23,8 @@ namespace HopcroftKarp
             Console.WriteLine(HopcroftKarp(lefts, rights, edges));
         }
 
-        private static bool Bfs(IEnumerable<string> lefts,
+        // BFS
+        private static bool HasAugmentingPath(IEnumerable<string> lefts,
                 IReadOnlyDictionary<string, string[]> edges,
                 IReadOnlyDictionary<string, string> toMatchedRight,
                 IReadOnlyDictionary<string, string> toMatchedLeft,
@@ -53,12 +54,12 @@ namespace HopcroftKarp
                 {
                     foreach (var right in edges[left])
                     {
-                        var left2 = toMatchedLeft[right];
-                        if (distances[left2] == long.MaxValue)
+                        var nextLeft = toMatchedLeft[right];
+                        if (distances[nextLeft] == long.MaxValue)
                         {
-                            // Reach here if the right is not matched with left.
-                            distances[left2] = distances[left] + 1;
-                            q.Enqueue(left2);
+                            // The nextLeft has not been visited and is being visited.
+                            distances[nextLeft] = distances[left] + 1;
+                            q.Enqueue(nextLeft);
                         }
                     }
                 }
@@ -67,11 +68,12 @@ namespace HopcroftKarp
             return distances[""] != long.MaxValue;
         }
 
-        private static bool Dfs(string left,
-                                IReadOnlyDictionary<string, string[]> edges,
-                                IDictionary<string, string> toMatchedRight,
-                                IDictionary<string, string> toMatchedLeft,
-                                IDictionary<string, long> distances)
+        // DFS
+        private static bool IsMathingIncremented(string left,
+                                                 IReadOnlyDictionary<string, string[]> edges,
+                                                 IDictionary<string, string> toMatchedRight,
+                                                 IDictionary<string, string> toMatchedLeft,
+                                                 IDictionary<string, long> distances)
         {
             if (left == "")
             {
@@ -80,10 +82,10 @@ namespace HopcroftKarp
 
             foreach (var right in edges[left])
             {
-                var left2 = toMatchedLeft[right];
-                if (distances[left2] == distances[left] + 1)
+                var nextLeft = toMatchedLeft[right];
+                if (distances[nextLeft] == distances[left] + 1)
                 {
-                    if (Dfs(left2, edges, toMatchedRight, toMatchedLeft, distances))
+                    if (IsMathingIncremented(nextLeft, edges, toMatchedRight, toMatchedLeft, distances))
                     {
                         toMatchedLeft[right] = left;
                         toMatchedRight[left] = right;
@@ -92,6 +94,7 @@ namespace HopcroftKarp
                 }
             }
 
+            // The left could not match any right.
             distances[left] = long.MaxValue;
 
             return false;
@@ -132,10 +135,14 @@ namespace HopcroftKarp
 
             var matchingCount = 0L;
 
-            while (Bfs(lefts, edges, toMatchedRight, toMatchedLeft, distances, q))
+            while (HasAugmentingPath(lefts, edges, toMatchedRight, toMatchedLeft, distances, q))
             {
                 matchingCount += lefts.Where(left => toMatchedRight[left] == "")
-                                      .LongCount(left => Dfs(left, edges, toMatchedRight, toMatchedLeft, distances));
+                                      .LongCount(unmatchedLeft => IsMathingIncremented(unmatchedLeft,
+                                                                                       edges,
+                                                                                       toMatchedRight,
+                                                                                       toMatchedLeft,
+                                                                                       distances));
             }
 
             return matchingCount;
