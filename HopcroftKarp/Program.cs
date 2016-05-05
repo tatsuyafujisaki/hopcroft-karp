@@ -8,16 +8,16 @@ namespace HopcroftKarp
     {
         private static void Main()
         {
-            var lefts = new[] { "U0", "U1", "U2", "U3", "U4" };
-            var rights = new[] { "V0", "V1", "V2", "V3", "V4" };
+            var lefts = new HashSet<string> { "U0", "U1", "U2", "U3", "U4" };
+            var rights = new HashSet<string> { "V0", "V1", "V2", "V3", "V4" };
 
-            var edges = new Dictionary<string, string[]>
+            var edges = new Dictionary<string, HashSet<string>>
             {
-                ["U0"] = new[] { "V0", "V1" },
-                ["U1"] = new[] { "V0", "V4" },
-                ["U2"] = new[] { "V2", "V3" },
-                ["U3"] = new[] { "V0", "V4" },
-                ["U4"] = new[] { "V1", "V3" }
+                ["U0"] = new HashSet<string> { "V0", "V1" },
+                ["U1"] = new HashSet<string> { "V0", "V4" },
+                ["U2"] = new HashSet<string> { "V2", "V3" },
+                ["U3"] = new HashSet<string> { "V0", "V4" },
+                ["U4"] = new HashSet<string> { "V1", "V3" }
             };
 
             var matches = HopcroftKarp(lefts, rights, edges);
@@ -32,11 +32,11 @@ namespace HopcroftKarp
 
         // BFS
         private static bool HasAugmentingPath(IEnumerable<string> lefts,
-                IReadOnlyDictionary<string, string[]> edges,
-                IReadOnlyDictionary<string, string> toMatchedRight,
-                IReadOnlyDictionary<string, string> toMatchedLeft,
-                IDictionary<string, long> distances,
-                Queue<string> q)
+                                              IReadOnlyDictionary<string, HashSet<string>> edges,
+                                              IReadOnlyDictionary<string, string> toMatchedRight,
+                                              IReadOnlyDictionary<string, string> toMatchedLeft,
+                                              IDictionary<string, long> distances,
+                                              Queue<string> q)
         {
             foreach (var left in lefts)
             {
@@ -77,10 +77,10 @@ namespace HopcroftKarp
 
         // DFS
         private static bool TryMatching(string left,
-                                                 IReadOnlyDictionary<string, string[]> edges,
-                                                 IDictionary<string, string> toMatchedRight,
-                                                 IDictionary<string, string> toMatchedLeft,
-                                                 IDictionary<string, long> distances)
+                                        IReadOnlyDictionary<string, HashSet<string>> edges,
+                                        IDictionary<string, string> toMatchedRight,
+                                        IDictionary<string, string> toMatchedLeft,
+                                        IDictionary<string, long> distances)
         {
             if (left == "")
             {
@@ -107,9 +107,9 @@ namespace HopcroftKarp
             return false;
         }
 
-        private static Dictionary<string, string> HopcroftKarp(string[] lefts,
-                                                  IEnumerable<string> rights,
-                                                  IReadOnlyDictionary<string, string[]> edges)
+        private static Dictionary<string, string> HopcroftKarp(HashSet<string> lefts,
+                                                               IEnumerable<string> rights,
+                                                               IReadOnlyDictionary<string, HashSet<string>> edges)
         {
             // "distance" is from a starting left to another left when zig-zaging left, right, left, right, left in DFS.
 
