@@ -122,15 +122,15 @@ namespace HopcroftKarp
 
             var q = new Queue<string>();
 
-            // All lefts are unmatched at first
+            // All lefts start with being unmatched with any right.
             var toMatchedRight = lefts.ToDictionary(s => s, s => "");
 
-            // All rights are unmatched at first
+            // All rights start with being unmatched with any left.
             var toMatchedLeft = rights.ToDictionary(s => s, s => "");
 
             // Note
-            // toMatchedRight and toMatchedLeft are the same thing and inverse to each other.
-            // Using either of them works enough but is inefficient
+            // toMatchedRight and toMatchedLeft are the same thing but inverse to each other.
+            // Using either of them is enough but inefficient
             // because a dictionary cannot be straightforwardly looked up bi-directionally.
 
             var matchingCount = 0L;
