@@ -122,10 +122,10 @@ namespace HopcroftKarp
 
             var q = new Queue<string>();
 
-            // All lefts start with being unmatched with any right.
+            // All lefts start as being unmatched with any right.
             var toMatchedRight = lefts.ToDictionary(s => s, s => "");
 
-            // All rights start with being unmatched with any left.
+            // All rights start as being unmatched with any left.
             var toMatchedLeft = rights.ToDictionary(s => s, s => "");
 
             // Note
