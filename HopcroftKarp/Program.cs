@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace HopcroftKarp
 {
-    internal static class Program
+    static class Program
     {
-        private static void Main()
+        static void Main()
         {
             var lefts = new HashSet<string> { "U0", "U1", "U2", "U3", "U4" };
             var rights = new HashSet<string> { "V0", "V1", "V2", "V3", "V4" };
@@ -31,12 +31,12 @@ namespace HopcroftKarp
         }
 
         // BFS
-        private static bool HasAugmentingPath(IEnumerable<string> lefts,
-                                              IReadOnlyDictionary<string, HashSet<string>> edges,
-                                              IReadOnlyDictionary<string, string> toMatchedRight,
-                                              IReadOnlyDictionary<string, string> toMatchedLeft,
-                                              IDictionary<string, long> distances,
-                                              Queue<string> q)
+        static bool HasAugmentingPath(IEnumerable<string> lefts,
+                                             IReadOnlyDictionary<string, HashSet<string>> edges,
+                                             IReadOnlyDictionary<string, string> toMatchedRight,
+                                             IReadOnlyDictionary<string, string> toMatchedLeft,
+                                             IDictionary<string, long> distances,
+                                             Queue<string> q)
         {
             foreach (var left in lefts)
             {
@@ -76,11 +76,11 @@ namespace HopcroftKarp
         }
 
         // DFS
-        private static bool TryMatching(string left,
-                                        IReadOnlyDictionary<string, HashSet<string>> edges,
-                                        IDictionary<string, string> toMatchedRight,
-                                        IDictionary<string, string> toMatchedLeft,
-                                        IDictionary<string, long> distances)
+        static bool TryMatching(string left,
+                                       IReadOnlyDictionary<string, HashSet<string>> edges,
+                                       IDictionary<string, string> toMatchedRight,
+                                       IDictionary<string, string> toMatchedLeft,
+                                       IDictionary<string, long> distances)
         {
             if (left == "")
             {
@@ -107,9 +107,9 @@ namespace HopcroftKarp
             return false;
         }
 
-        private static Dictionary<string, string> HopcroftKarp(HashSet<string> lefts,
-                                                               IEnumerable<string> rights,
-                                                               IReadOnlyDictionary<string, HashSet<string>> edges)
+        static Dictionary<string, string> HopcroftKarp(HashSet<string> lefts,
+                                                              IEnumerable<string> rights,
+                                                              IReadOnlyDictionary<string, HashSet<string>> edges)
         {
             // "distance" is from a starting left to another left when zig-zaging left, right, left, right, left in DFS.
 
@@ -155,7 +155,7 @@ namespace HopcroftKarp
             return toMatchedRight;
         }
 
-        private static void RemoveItems<T1, T2>(IDictionary<T1, T2> d, Func<KeyValuePair<T1, T2>, bool> isRemovable)
+        static void RemoveItems<T1, T2>(IDictionary<T1, T2> d, Func<KeyValuePair<T1, T2>, bool> isRemovable)
         {
             foreach (var kvp in d.Where(isRemovable).ToList())
             {
