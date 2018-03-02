@@ -32,11 +32,11 @@ namespace HopcroftKarp
 
         // BFS
         static bool HasAugmentingPath(IEnumerable<string> lefts,
-                                             IReadOnlyDictionary<string, HashSet<string>> edges,
-                                             IReadOnlyDictionary<string, string> toMatchedRight,
-                                             IReadOnlyDictionary<string, string> toMatchedLeft,
-                                             IDictionary<string, long> distances,
-                                             Queue<string> q)
+                                      IReadOnlyDictionary<string, HashSet<string>> edges,
+                                      IReadOnlyDictionary<string, string> toMatchedRight,
+                                      IReadOnlyDictionary<string, string> toMatchedLeft,
+                                      IDictionary<string, long> distances,
+                                      Queue<string> q)
         {
             foreach (var left in lefts)
             {
@@ -77,10 +77,10 @@ namespace HopcroftKarp
 
         // DFS
         static bool TryMatching(string left,
-                                       IReadOnlyDictionary<string, HashSet<string>> edges,
-                                       IDictionary<string, string> toMatchedRight,
-                                       IDictionary<string, string> toMatchedLeft,
-                                       IDictionary<string, long> distances)
+                                IReadOnlyDictionary<string, HashSet<string>> edges,
+                                IDictionary<string, string> toMatchedRight,
+                                IDictionary<string, string> toMatchedLeft,
+                                IDictionary<string, long> distances)
         {
             if (left == "")
             {
@@ -108,8 +108,8 @@ namespace HopcroftKarp
         }
 
         static Dictionary<string, string> HopcroftKarp(HashSet<string> lefts,
-                                                              IEnumerable<string> rights,
-                                                              IReadOnlyDictionary<string, HashSet<string>> edges)
+                                                       IEnumerable<string> rights,
+                                                       IReadOnlyDictionary<string, HashSet<string>> edges)
         {
             // "distance" is from a starting left to another left when zig-zaging left, right, left, right, left in DFS.
 
